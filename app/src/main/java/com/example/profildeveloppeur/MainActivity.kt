@@ -5,11 +5,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -30,6 +35,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.ui.res.painterResource
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.Alignment
 
 data class ProjectUi(
     val id: Int,
@@ -144,8 +151,9 @@ fun ProfileCardContent(
         ProfileHeader(
             name = name,
             role = role,
-            modifier = Modifier.padding(bottom = 16.dp)
+            isAvailable = isAvailable
         )
+        Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = description,
             modifier = Modifier.padding(bottom = 8.dp)
@@ -160,10 +168,6 @@ fun ProfileCardContent(
                 modifier = Modifier.padding(bottom = 4.dp)
             )
         }
-        Availability(
-            isAvailable = isAvailable,
-            modifier = Modifier.padding(top = 12.dp)
-        )
         ContactField(
             label = "Email",
             value = email,
@@ -190,19 +194,43 @@ fun ProfileCardContent(
 }
 
 @Composable
-fun ProfileHeader(
+fun ProfileAvatar(
     name: String,
-    role: String,
+    isAvailable: Boolean,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier) {
+    Box(modifier = modifier) {
         Image(
             painter = painterResource(id = android.R.drawable.ic_menu_gallery),
             contentDescription = "Avatar de $name",
-            modifier = Modifier.size(80.dp)
+            modifier = Modifier
+                .size(80.dp)
         )
-        Text(text = name, fontSize = 24.sp, fontWeight = FontWeight.Bold)
-        Text(text = role, fontSize = 16.sp, color = Color.DarkGray)
+        Availability(
+            isAvailable = isAvailable,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+        )
+    }
+}
+
+@Composable
+fun ProfileHeader(
+    name: String,
+    role: String,
+    isAvailable: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier = modifier) {
+        ProfileAvatar(
+            name = name,
+            isAvailable = isAvailable
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Column {
+            Text(text = name, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+            Text(text = role, fontSize = 16.sp, color = Color.DarkGray)
+        }
     }
 }
 
@@ -222,14 +250,21 @@ fun Availability(
     isAvailable: Boolean,
     modifier: Modifier = Modifier
 ) {
-    Text(
-        text = if (isAvailable) {
-            "Disponible"
-        } else {
-            "Non disponible actuellement"
-        },
-        modifier = modifier
-    )
+    Surface(
+        modifier = modifier,
+        shape = MaterialTheme.shapes.small,
+        tonalElevation = 6.dp
+    ) {
+        Text(
+            text = if (isAvailable) {
+                "Disponible"
+            } else {
+                "Indisponible"
+            },
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+            style = MaterialTheme.typography.labelMedium
+        )
+    }
 }
 
 @Composable
