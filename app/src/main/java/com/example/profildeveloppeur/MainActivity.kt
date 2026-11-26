@@ -27,12 +27,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.profildeveloppeur.ui.theme.ProfilDeveloppeurTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.ui.res.painterResource
@@ -41,6 +38,7 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CardDefaults
 
 data class ProjectUi(
     val id: Int,
@@ -91,7 +89,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun ProfileScreen(modifier: Modifier = Modifier) {
     Surface(
-        color = Color.LightGray,
+        color = MaterialTheme.colorScheme.background,
         modifier = modifier.fillMaxSize()
     ) {
         LazyColumn(
@@ -115,7 +113,8 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
             item {
                 Text(
                     text = "Mes projets",
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
             items(
@@ -140,7 +139,16 @@ fun ProfileCard(
     onContactClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Card(modifier = modifier) {
+    Card(
+        modifier = modifier,
+        shape = MaterialTheme.shapes.large,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 3.dp
+        )
+    ) {
         ProfileCardContent(
             name = name,
             role = role,
@@ -177,10 +185,12 @@ fun ProfileCardContent(
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = description,
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(bottom = 8.dp)
         )
         Text(
             text = "Compétences :",
+            style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(bottom = 4.dp)
         )
         skills.forEach { skill ->
@@ -249,8 +259,16 @@ fun ProfileHeader(
         )
         Spacer(modifier = Modifier.width(16.dp))
         Column {
-            Text(text = name, fontSize = 24.sp, fontWeight = FontWeight.Bold)
-            Text(text = role, fontSize = 16.sp, color = Color.DarkGray)
+            Text(
+                text = name,
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Text(
+                text = role,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.secondary
+            )
         }
     }
 }
@@ -274,7 +292,8 @@ fun Availability(
     Surface(
         modifier = modifier,
         shape = MaterialTheme.shapes.small,
-        tonalElevation = 6.dp
+        color = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onPrimary
     ) {
         Text(
             text = if (isAvailable) {
@@ -325,17 +344,28 @@ fun ProjectCard(
     project: ProjectUi,
     modifier: Modifier = Modifier
 ) {
-    Card(modifier = modifier.fillMaxWidth()) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.large,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 3.dp
+        )
+    ) {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
                 text = project.title,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurface
             )
             Text(
                 text = project.description,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.secondary
             )
         }
     }
