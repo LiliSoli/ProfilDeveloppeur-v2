@@ -371,25 +371,6 @@ fun ProjectCard(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun ProfileCardUnavailablePreview() {
-    ProfilDeveloppeurTheme {
-        ProfileCard(
-            name = "Thomas M.",
-            role = "Développeur Java",
-            description = "Développeur Java",
-            skills = listOf("Java", "Spring", "Nuxeo"),
-            isAvailable = false,
-            email = "thomas.m@email.com",
-            location = "Paris, France",
-            onContactClick = {},
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(32.dp)
-        )
-    }
-}
 
 @Preview(
     showBackground = true,
@@ -410,5 +391,26 @@ fun ProfileScreenLightPreview() {
 fun ProfileScreenDarkPreview() {
     ProfilDeveloppeurTheme(darkTheme = true) {
         ProfileScreen()
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun ProfileCardUnavailablePreview() {
+    ProfilDeveloppeurTheme {
+        ProfileCard(
+            name = "Thomas M.",
+            role = "Développeur Java",
+            description = "Développeur Java",
+            skills = listOf("Java", "Spring", "Nuxeo"),
+            isAvailable = false,
+            email = "thomas.m@email.com",
+            location = "Paris, France",
+            onContactClick = {},
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(32.dp)
+        )
     }
 }
