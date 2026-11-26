@@ -380,3 +380,11 @@ fun ProfileCardUnavailablePreview() {
         )
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun ProfileScreenPreview() {
+    ProfilDeveloppeurTheme {
+        ProfileScreen()
+    }
+}
