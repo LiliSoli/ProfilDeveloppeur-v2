@@ -24,7 +24,7 @@ Le thème suit la démarche du TP7 : mêmes rôles de couleurs, mêmes arrondis 
 
 ## Capture d'écran
 
-![Thème clair et sombre](screenshots/capture2.png)
+![Thème clair et sombre](capture2.png)
 
 ## Quelles notions du chapitre Compose UI avez-vous réutilisées ?
 
