@@ -21,6 +21,36 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.profildeveloppeur.ui.theme.ProfilDeveloppeurTheme
 
+data class ProjectUi(
+    val id: Int,
+    val title: String,
+    val description: String
+)
+
+fun sampleProjects(): List<ProjectUi> {
+    return listOf(
+        ProjectUi(
+            id = 1,
+            title = "GreenCork",
+            description = "Application web B2B pour un importateur de vins"
+        ),
+        ProjectUi(
+            id = 2,
+            title = "Notae",
+            description = "Projet de groupe réalisé pendant la formation CDA"
+        ),
+        ProjectUi(
+            id = 3,
+            title = "Profil développeur",
+            description = "Application Android avec Jetpack Compose"
+        )
+    )
+}
+
+fun sampleSkills(): List<String> {
+    return listOf("Java", "Spring Boot", "React", "Kotlin", "Compose")
+}
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +77,7 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
             name = "Aurélie S.",
             role = "Développeuse Java",
             description = "En alternance chez Worldline",
-            skills = listOf("Java", "Spring Boot", "React"),
+            skills = sampleSkills(),
             isAvailable = true,
             onContactClick = {
             },
@@ -187,7 +217,7 @@ fun ProfileCardAvailablePreview() {
             name = "Aurélie S.",
             role = "Développeuse Java",
             description = "En alternance chez Worldline",
-            skills = listOf("Java", "Spring Boot", "React"),
+            skills = sampleSkills(),
             isAvailable = true,
             onContactClick = {},
             modifier = Modifier
