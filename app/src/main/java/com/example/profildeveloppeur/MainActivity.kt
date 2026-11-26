@@ -4,22 +4,71 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.profildeveloppeur.ui.theme.ProfilDeveloppeurTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.ui.res.painterResource
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.Alignment
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CardDefaults
+
+data class ProjectUi(
+    val id: Int,
+    val title: String,
+    val description: String
+)
+
+fun sampleProjects(): List<ProjectUi> {
+    return listOf(
+        ProjectUi(
+            id = 1,
+            title = "GreenCork",
+            description = "Application web B2B pour un importateur de vins"
+        ),
+        ProjectUi(
+            id = 2,
+            title = "Notae",
+            description = "Projet de groupe réalisé pendant la formation CDA"
+        ),
+        ProjectUi(
+            id = 3,
+            title = "Profil développeur",
+            description = "Application Android avec Jetpack Compose"
+        )
+    )
+}
+
+fun sampleSkills(): List<String> {
+    return listOf("Java", "Spring Boot", "React", "Kotlin", "Compose")
+}
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,21 +89,41 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun ProfileScreen(modifier: Modifier = Modifier) {
     Surface(
-        color = Color.LightGray,
+        color = MaterialTheme.colorScheme.background,
         modifier = modifier.fillMaxSize()
     ) {
-        ProfileCard(
-            name = "Aurélie S.",
-            role = "Développeuse Java",
-            description = "En alternance chez Worldline",
-            skills = listOf("Java", "Spring Boot", "React"),
-            isAvailable = true,
-            onContactClick = {
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(32.dp)
-        )
+        LazyColumn(
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            item {
+                ProfileCard(
+                    name = "Aurélie S.",
+                    role = "Développeuse Java",
+                    description = "En alternance chez Worldline",
+                    skills = sampleSkills(),
+                    isAvailable = true,
+                    email = "aurelie.s@email.com",
+                    location = "Tours, France",
+                    onContactClick = {
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+            item {
+                Text(
+                    text = "Mes projets",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+            items(
+                items = sampleProjects(),
+                key = { project -> project.id }
+            ) { project ->
+                ProjectCard(project = project)
+            }
+        }
     }
 }
 
@@ -65,12 +134,20 @@ fun ProfileCard(
     description: String,
     skills: List<String>,
     isAvailable: Boolean,
+    email: String,
+    location: String,
     onContactClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Surface(
-        color = Color.White,
-        modifier = modifier
+    Card(
+        modifier = modifier,
+        shape = MaterialTheme.shapes.large,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 3.dp
+        )
     ) {
         ProfileCardContent(
             name = name,
@@ -78,6 +155,8 @@ fun ProfileCard(
             description = description,
             skills = skills,
             isAvailable = isAvailable,
+            email = email,
+            location = location,
             onContactClick = onContactClick
         )
     }
@@ -90,6 +169,8 @@ fun ProfileCardContent(
     description: String,
     skills: List<String>,
     isAvailable: Boolean,
+    email: String,
+    location: String,
     onContactClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -99,14 +180,17 @@ fun ProfileCardContent(
         ProfileHeader(
             name = name,
             role = role,
-            modifier = Modifier.padding(bottom = 16.dp)
+            isAvailable = isAvailable
         )
+        Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = description,
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(bottom = 8.dp)
         )
         Text(
             text = "Compétences :",
+            style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(bottom = 4.dp)
         )
         skills.forEach { skill ->
@@ -115,9 +199,21 @@ fun ProfileCardContent(
                 modifier = Modifier.padding(bottom = 4.dp)
             )
         }
-        Availability(
-            isAvailable = isAvailable,
-            modifier = Modifier.padding(top = 12.dp)
+        ContactField(
+            label = "Email",
+            value = email,
+            icon = Icons.Default.Email,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp)
+        )
+        ContactField(
+            label = "Localisation",
+            value = location,
+            icon = Icons.Default.LocationOn,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
         )
         ContactButton(
             onContactClick = onContactClick,
@@ -129,14 +225,51 @@ fun ProfileCardContent(
 }
 
 @Composable
+fun ProfileAvatar(
+    name: String,
+    isAvailable: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Box(modifier = modifier) {
+        Image(
+            painter = painterResource(id = android.R.drawable.ic_menu_gallery),
+            contentDescription = "Avatar de $name",
+            modifier = Modifier
+                .size(80.dp)
+        )
+        Availability(
+            isAvailable = isAvailable,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+        )
+    }
+}
+
+@Composable
 fun ProfileHeader(
     name: String,
     role: String,
+    isAvailable: Boolean,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier) {
-        Text(text = name, fontSize = 24.sp, fontWeight = FontWeight.Bold)
-        Text(text = role, fontSize = 16.sp, color = Color.DarkGray)
+    Row(modifier = modifier) {
+        ProfileAvatar(
+            name = name,
+            isAvailable = isAvailable
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Column {
+            Text(
+                text = name,
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Text(
+                text = role,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.secondary
+            )
+        }
     }
 }
 
@@ -156,11 +289,38 @@ fun Availability(
     isAvailable: Boolean,
     modifier: Modifier = Modifier
 ) {
-    Text(
-        text = if (isAvailable) {
-            "Disponible"
-        } else {
-            "Non disponible actuellement"
+    Surface(
+        modifier = modifier,
+        shape = MaterialTheme.shapes.small,
+        color = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onPrimary
+    ) {
+        Text(
+            text = if (isAvailable) {
+                "Disponible"
+            } else {
+                "Indisponible"
+            },
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+            style = MaterialTheme.typography.labelMedium
+        )
+    }
+}
+
+@Composable
+fun ContactField(
+    label: String,
+    value: String,
+    icon: ImageVector,
+    modifier: Modifier = Modifier
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = {},
+        readOnly = true,
+        label = { Text(text = label) },
+        leadingIcon = {
+            Icon(imageVector = icon, contentDescription = null)
         },
         modifier = modifier
     )
@@ -179,21 +339,35 @@ fun ContactButton(
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun ProfileCardAvailablePreview() {
-    ProfilDeveloppeurTheme {
-        ProfileCard(
-            name = "Aurélie S.",
-            role = "Développeuse Java",
-            description = "En alternance chez Worldline",
-            skills = listOf("Java", "Spring Boot", "React"),
-            isAvailable = true,
-            onContactClick = {},
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(32.dp)
+fun ProjectCard(
+    project: ProjectUi,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.large,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 3.dp
         )
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = project.title,
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                text = project.description,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.secondary
+            )
+        }
     }
 }
 
@@ -207,10 +381,34 @@ fun ProfileCardUnavailablePreview() {
             description = "Développeur Java",
             skills = listOf("Java", "Spring", "Nuxeo"),
             isAvailable = false,
+            email = "thomas.m@email.com",
+            location = "Paris, France",
             onContactClick = {},
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(32.dp)
         )
+    }
+}
+
+@Preview(
+    showBackground = true,
+    name = "Profil - Light Theme"
+)
+@Composable
+fun ProfileScreenLightPreview() {
+    ProfilDeveloppeurTheme(darkTheme = false) {
+        ProfileScreen()
+    }
+}
+
+@Preview(
+    showBackground = true,
+    name = "Profil - Dark Theme"
+)
+@Composable
+fun ProfileScreenDarkPreview() {
+    ProfilDeveloppeurTheme(darkTheme = true) {
+        ProfileScreen()
     }
 }
