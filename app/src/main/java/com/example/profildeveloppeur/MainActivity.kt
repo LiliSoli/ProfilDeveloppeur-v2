@@ -4,22 +4,32 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.profildeveloppeur.ui.theme.ProfilDeveloppeurTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.ui.res.painterResource
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.LocationOn
 
 data class ProjectUi(
     val id: Int,
@@ -79,6 +89,8 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
             description = "En alternance chez Worldline",
             skills = sampleSkills(),
             isAvailable = true,
+            email = "aurelie.s@email.com",
+            location = "Tours, France",
             onContactClick = {
             },
             modifier = Modifier
@@ -95,19 +107,20 @@ fun ProfileCard(
     description: String,
     skills: List<String>,
     isAvailable: Boolean,
+    email: String,
+    location: String,
     onContactClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Surface(
-        color = Color.White,
-        modifier = modifier
-    ) {
+    Card(modifier = modifier) {
         ProfileCardContent(
             name = name,
             role = role,
             description = description,
             skills = skills,
             isAvailable = isAvailable,
+            email = email,
+            location = location,
             onContactClick = onContactClick
         )
     }
@@ -120,6 +133,8 @@ fun ProfileCardContent(
     description: String,
     skills: List<String>,
     isAvailable: Boolean,
+    email: String,
+    location: String,
     onContactClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -149,6 +164,22 @@ fun ProfileCardContent(
             isAvailable = isAvailable,
             modifier = Modifier.padding(top = 12.dp)
         )
+        ContactField(
+            label = "Email",
+            value = email,
+            icon = Icons.Default.Email,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp)
+        )
+        ContactField(
+            label = "Localisation",
+            value = location,
+            icon = Icons.Default.LocationOn,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
+        )
         ContactButton(
             onContactClick = onContactClick,
             modifier = Modifier
@@ -165,6 +196,11 @@ fun ProfileHeader(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
+        Image(
+            painter = painterResource(id = android.R.drawable.ic_menu_gallery),
+            contentDescription = "Avatar de $name",
+            modifier = Modifier.size(80.dp)
+        )
         Text(text = name, fontSize = 24.sp, fontWeight = FontWeight.Bold)
         Text(text = role, fontSize = 16.sp, color = Color.DarkGray)
     }
@@ -197,6 +233,25 @@ fun Availability(
 }
 
 @Composable
+fun ContactField(
+    label: String,
+    value: String,
+    icon: ImageVector,
+    modifier: Modifier = Modifier
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = {},
+        readOnly = true,
+        label = { Text(text = label) },
+        leadingIcon = {
+            Icon(imageVector = icon, contentDescription = null)
+        },
+        modifier = modifier
+    )
+}
+
+@Composable
 fun ContactButton(
     onContactClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -219,6 +274,8 @@ fun ProfileCardAvailablePreview() {
             description = "En alternance chez Worldline",
             skills = sampleSkills(),
             isAvailable = true,
+            email = "aurelie.s@email.com",
+            location = "Tours, France",
             onContactClick = {},
             modifier = Modifier
                 .fillMaxWidth()
@@ -237,6 +294,8 @@ fun ProfileCardUnavailablePreview() {
             description = "Développeur Java",
             skills = listOf("Java", "Spring", "Nuxeo"),
             isAvailable = false,
+            email = "thomas.m@email.com",
+            location = "Paris, France",
             onContactClick = {},
             modifier = Modifier
                 .fillMaxWidth()
