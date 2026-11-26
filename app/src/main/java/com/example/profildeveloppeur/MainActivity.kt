@@ -5,8 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -37,6 +40,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
+import androidx.compose.foundation.lazy.items
 
 data class ProjectUi(
     val id: Int,
@@ -90,20 +94,37 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
         color = Color.LightGray,
         modifier = modifier.fillMaxSize()
     ) {
-        ProfileCard(
-            name = "Aurélie S.",
-            role = "Développeuse Java",
-            description = "En alternance chez Worldline",
-            skills = sampleSkills(),
-            isAvailable = true,
-            email = "aurelie.s@email.com",
-            location = "Tours, France",
-            onContactClick = {
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(32.dp)
-        )
+        LazyColumn(
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            item {
+                ProfileCard(
+                    name = "Aurélie S.",
+                    role = "Développeuse Java",
+                    description = "En alternance chez Worldline",
+                    skills = sampleSkills(),
+                    isAvailable = true,
+                    email = "aurelie.s@email.com",
+                    location = "Tours, France",
+                    onContactClick = {
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+            item {
+                Text(
+                    text = "Mes projets",
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
+            items(
+                items = sampleProjects(),
+                key = { project -> project.id }
+            ) { project ->
+                ProjectCard(project = project)
+            }
+        }
     }
 }
 
@@ -299,6 +320,27 @@ fun ContactButton(
     }
 }
 
+@Composable
+fun ProjectCard(
+    project: ProjectUi,
+    modifier: Modifier = Modifier
+) {
+    Card(modifier = modifier.fillMaxWidth()) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = project.title,
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = project.description,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ProfileCardAvailablePreview() {
@@ -336,5 +378,13 @@ fun ProfileCardUnavailablePreview() {
                 .fillMaxWidth()
                 .padding(32.dp)
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ProfileScreenPreview() {
+    ProfilDeveloppeurTheme {
+        ProfileScreen()
     }
 }
