@@ -373,26 +373,6 @@ fun ProjectCard(
 
 @Preview(showBackground = true)
 @Composable
-fun ProfileCardAvailablePreview() {
-    ProfilDeveloppeurTheme {
-        ProfileCard(
-            name = "Aurélie S.",
-            role = "Développeuse Java",
-            description = "En alternance chez Worldline",
-            skills = sampleSkills(),
-            isAvailable = true,
-            email = "aurelie.s@email.com",
-            location = "Tours, France",
-            onContactClick = {},
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(32.dp)
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
 fun ProfileCardUnavailablePreview() {
     ProfilDeveloppeurTheme {
         ProfileCard(
@@ -411,10 +391,24 @@ fun ProfileCardUnavailablePreview() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    name = "Profil - Light Theme"
+)
 @Composable
-fun ProfileScreenPreview() {
-    ProfilDeveloppeurTheme {
+fun ProfileScreenLightPreview() {
+    ProfilDeveloppeurTheme(darkTheme = false) {
+        ProfileScreen()
+    }
+}
+
+@Preview(
+    showBackground = true,
+    name = "Profil - Dark Theme"
+)
+@Composable
+fun ProfileScreenDarkPreview() {
+    ProfilDeveloppeurTheme(darkTheme = true) {
         ProfileScreen()
     }
 }
